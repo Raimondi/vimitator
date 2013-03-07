@@ -19,18 +19,19 @@ module Vimitator
         matches /:/                           => :COLON
         matches /;/                           => :SEMICOLON
         matches /#/                           => :HASH
-        matches /\./                          => :DOT
+        matches /(?<!\s)\.(?!\s)/              => :DICDOT
+        matches /\./                          => :CATDOT
         matches /\+/                          => :PLUS
         matches /\*/                          => :STAR
         matches /\?/                          => :QUESTION
         matches /-/                           => :MINUS
         matches /\//                          => :SLASH
-        matches /%/                           => :MODULE
+        matches /%/                           => :MODULUS
         matches /!/                           => :NOT
         matches /&&/                          => :AND
         matches /\|\|/                        => :OR
-        matches /[+-.]=/                      => :ASIGN
-        matches /([!=<>]~|\bis(not)?\b|[<>])[#?]?/=> :COMPARE
+        matches /[+-.]=/                      => :ASSIGN
+        matches /([!=<>]~|\bis(not)?\b|[<>])[#?]?/=> :CMPOP
         matches /"(\\.|[^"])*"/               => :DQSTRING
         matches /'(''|[^'])*'/                => :SQSTRING
         matches /(\b[sbwt]:)?[a-zA-Z_]/       => :HEAD
@@ -38,8 +39,9 @@ module Vimitator
         matches /&#{ident}/                   => :OPTION
         matches /$#{ident}/                   => :ENVVAR
         matches /#{ident}#/                   => :NAMESPACE
+        matches /#{ident}/                    => :IDENTIFIER
         #matches /[ \t]+/                      => :WHITE
-        ignores /\s*/                         => :EOL
+        ignores /\s+/                         => :EOL
       }
       source.each_line {|line|
         lexer = expr.new(line)

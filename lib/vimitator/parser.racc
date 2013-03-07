@@ -1,39 +1,46 @@
 # vim:set ft=ruby:
 class Vimitator::Parser
 
+prechigh
+  nonassoc UNOT UMINUS UPLUS
+  left STAR SLASH
+  left PLUS MINUS
+  right ASSIGN
+preclow
+
 rule
 
 vimexpr : expr1 END
 expr1 : expr2
-      | expr2 question expr1 colon expr1
+      | expr2 QUESTION expr1 COLON expr1   {result = val}
 
 expr2 : expr3
-      | expr2 or expr3
+      | expr2 OR expr3          {result = val}
 
 expr3 : expr4
-      | expr3 and expr4
+      | expr3 AND expr4         {result = val}
 
 expr4 : expr5
-      | expr4 compare expr5
+      | expr4 CMPOP expr5       {result = val}
 
 expr5 : expr6
-      | expr5 expr5op expr6
+      | expr5 ADDOP expr6       {result = val}
 
-expr5op : plus
-        | minus
-        | dot
+ADDOP : PLUS
+      | MINUS
+      | CATDOT
 
 expr6 : expr7
-      | expr6 expr6op expr7
+      | expr6 MULOP expr7       {result = val}
 
-expr6op : mod
-        | slash
-        | star
+MULOP : MODULUS
+      | SLASH
+      | STAR
 
 expr7 : expr8
-      | not expr7
-      | minus expr7
-      | plus expr7
+      | NOT expr7     =UNOT     {result = val}
+      | MINUS expr7   =UMINUS   {result = val}
+      | PLUS expr7    =UPLUS    {result = val}
 
 expr8 : expr9
       | funcrefcall
@@ -41,14 +48,14 @@ expr8 : expr9
       | idxrange
       | index
 
-index       : expr8 lsquare expr1 RSQUARE
-idxrange    : expr8 lsquare expr1 colon expr1 RSQUARE
-            | expr8 lsquare colon expr1 RSQUARE
-            | expr8 lsquare expr1 colon RSQUARE
-            | expr8 lsquare colon RSQUARE
-dictdot     : expr8 DOT word
-funcrefcall : expr8 lparen exprlist RPAREN
-            | expr8 lparen RPAREN
+index       : expr8 LSQUARE expr1 RSQUARE              {result = val}
+idxrange    : expr8 LSQUARE expr1 COLON expr1 RSQUARE  {result = val}
+            | expr8 LSQUARE COLON expr1 RSQUARE        {result = val}
+            | expr8 LSQUARE expr1 COLON RSQUARE        {result = val}
+            | expr8 LSQUARE COLON RSQUARE              {result = val}
+dictdot     : expr8 DICDOT word                        {result = val}
+funcrefcall : expr8 LPAREN exprlist RPAREN             {result = val}
+            | expr8 LPAREN RPAREN                      {result = val}
 
 expr9 : NUMBER
       | FLOAT
@@ -63,53 +70,36 @@ expr9 : NUMBER
       | DQSTRING
       | nested
 
-nested       : lparen expr1 RPAREN
-dictionary   : lcurly dictlist RCURLY
-             | lcurly RCURLY
+nested       : LPAREN expr1 RPAREN            {result = val}
+dictionary   : LCURLY dictlist RCURLY         {result = val}
+             | LCURLY RCURLY                  {result = val}
 dictlist     : dictitem
-             | dictlist comma dictitem
-dictitem     : expr1 colon expr1
-list         : lsquare exprlist RSQUARE
-             | lsquare RSQUARE
-funccall     : ident lparen exprlist RPAREN
-             | ident lparen RPAREN
+             | dictlist COMMA dictitem        {result = val}
+dictitem     : expr1 COLON expr1              {result = val}
+list         : LSQUARE exprlist RSQUARE       {result = val}
+             | LSQUARE RSQUARE                {result = val}
+funccall     : ident LPAREN exprlist RPAREN   {result = val}
+             | ident LPAREN RPAREN            {result = val}
 exprlist     : expr1
-             | exprlist comma expr1
+             | exprlist COMMA expr1           {result = val}
 variable     : ident
 ident        : startofident
-             | ident NAMESPACE
-             | ident NUMBER
-             | ident HASH
-             | ident startofident
+             | ident NAMESPACE                {result = val}
+             | ident NUMBER                   {result = val}
+             | ident HASH                     {result = val}
+             | ident startofident             {result = val}
+             # ^-- these don't look right  XXX
 word         : HEAD
-             | word NUMBER
-             | word HEAD
+             | word NUMBER                    {result = val}
+             | word HEAD                      {result = val}
+             # ^-- that doesn't look right  XXX
 startofident : braceident
              | HEAD
-braceident   : lcurly expr1 RCURLY
+braceident   : LCURLY expr1 RCURLY            {result = val}
 number       : NUMBER
              | FLOAT
-register     : REGISTER
-option       : OPTION
-envvariable  : ENVVAR
 string       : DQSTRING
              | SQSTRING
-compare      : COMPARE
-lparen       : LPAREN
-rparen       : RPAREN
-lcurly       : LCURLY
-rcurly       : RCURLY
-lsquare      : LSQUARE
-rsquare      : RSQUARE
-comma        : COMMA
-colon        : COLON
-not          : NOT
-and          : AND
-or           : OR
-plus         : PLUS
-minus        : MINUS
-star         : STAR
-mod          : MODULE
 
 end
 
