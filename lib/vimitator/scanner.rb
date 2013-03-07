@@ -38,7 +38,6 @@ module Vimitator
         matches /@#{registers}/               => :REGISTER
         matches /&#{ident}/                   => :OPTION
         matches /$#{ident}/                   => :ENVVAR
-        matches /#{ident}#/                   => :NAMESPACE
         matches /#{ident}/                    => :IDENTIFIER
         #matches /[ \t]+/                      => :WHITE
         ignores /\s+/                         => :EOL

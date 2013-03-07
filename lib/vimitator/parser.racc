@@ -59,8 +59,8 @@ funcrefcall : expr8 LPAREN exprlist RPAREN             {result = val}
 
 expr9 : NUMBER
       | FLOAT
-      | funccall
       | variable
+      | funccall
       | REGISTER
       | ENVVAR
       | list
@@ -70,36 +70,33 @@ expr9 : NUMBER
       | DQSTRING
       | nested
 
-nested       : LPAREN expr1 RPAREN            {result = val}
-dictionary   : LCURLY dictlist RCURLY         {result = val}
-             | LCURLY RCURLY                  {result = val}
-dictlist     : dictitem
-             | dictlist COMMA dictitem        {result = val}
-dictitem     : expr1 COLON expr1              {result = val}
-list         : LSQUARE exprlist RSQUARE       {result = val}
-             | LSQUARE RSQUARE                {result = val}
-funccall     : ident LPAREN exprlist RPAREN   {result = val}
-             | ident LPAREN RPAREN            {result = val}
-exprlist     : expr1
-             | exprlist COMMA expr1           {result = val}
-variable     : ident
-ident        : startofident
-             | ident NAMESPACE                {result = val}
-             | ident NUMBER                   {result = val}
-             | ident HASH                     {result = val}
-             | ident startofident             {result = val}
-             # ^-- these don't look right  XXX
-word         : HEAD
-             | word NUMBER                    {result = val}
-             | word HEAD                      {result = val}
-             # ^-- that doesn't look right  XXX
+nested     : LPAREN expr1 RPAREN            {result = val}
+dictionary : LCURLY dictlist RCURLY         {result = val}
+           | LCURLY RCURLY                  {result = val}
+dictlist   : dictitem
+           | dictlist COMMA dictitem        {result = val}
+dictitem   : expr1 COLON expr1              {result = val}
+list       : LSQUARE exprlist RSQUARE       {result = val}
+           | LSQUARE RSQUARE                {result = val}
+funccall   : variable LPAREN exprlist RPAREN   {result = val}
+           | variable LPAREN RPAREN            {result = val}
+exprlist   : expr1
+           | exprlist COMMA expr1           {result = val}
+variable   : startofident
+           | variable NUMBER                   {result = val}
+           | variable namespace                {result = val}
+           | variable startofident             {result = val}
+           # ^-- these don't look right  XXX
+namespace : HASH wordchar
+          | HASH braceident
+          # ^-- that doesn't look right  XXX
+word : wordchar                       {result = val}
+     | word wordchar                  {result = val}
+wordchar : NUMBER
+         | HEAD
 startofident : braceident
              | HEAD
-braceident   : LCURLY expr1 RCURLY            {result = val}
-number       : NUMBER
-             | FLOAT
-string       : DQSTRING
-             | SQSTRING
+braceident : LCURLY expr1 RCURLY            {result = val}
 
 end
 
