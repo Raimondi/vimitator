@@ -3,7 +3,8 @@ require "rubygems"
 require "bundler/gem_tasks"
 require "rake"
 
-task :default => [:test]
+task :default => [:racc, :test]
+task :racc => ['lib/vimitator/parser.rb']
 
 file 'lib/vimitator/parser.rb' => ['lib/vimitator/parser.racc'] do |t|
   sh "racc -t -v -o #{t.name} #{t.prerequisites.join(' ')}"
