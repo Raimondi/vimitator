@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+require './lib/vim/scanner'
+require './lib/vim/parser'
+#require './vim/peg/code_generator'
+
+tokens = Vim::Scanner.scan(STDIN.read)
+puts tokens.inspect
+ast = Vim::Parser.new.parse(tokens)
+puts ast
