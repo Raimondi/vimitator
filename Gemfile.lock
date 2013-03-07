@@ -6,7 +6,7 @@ PATH
       racc (~> 1.4.9)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     lexr (0.3.1)
     racc (1.4.9)
