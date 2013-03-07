@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'bundler/setup'
+require 'vimitator'
+
+#require './vim/peg/code_generator'
+
+tokens = Vimitator::Scanner.scan(STDIN.read)
+puts tokens.inspect
+ast = Vimitator::Parser.new.parse(tokens)
+puts ast
