@@ -5,7 +5,19 @@ rule
 
 vimexpr : expr END
 # This is a dummy non-terminal necessary until we write expr1
-expr : expr7
+expr : expr6
+
+expr6 : expr7
+      | expr6 module
+      | expr6 division
+      | expr6 multiplication
+
+module          : expr7 space mod expr7
+                | module space expr7 space mod expr7
+division        : expr7 space slash expr7
+                | division space expr7 space slash expr7
+multiplication  : expr7 space star expr7
+                | multiplication space expr7 space star expr7
 
 expr7 : expr8
       | not expr7
@@ -18,12 +30,12 @@ expr8 : expr9
       | idxrange
       | index
 
-index : expr8 lsquare expr RSQUARE
-idxrange : expr8 lsquare expr space colon expr RSQUARE
-         | expr8 lsquare colon expr RSQUARE
-         | expr8 lsquare expr space colon RSQUARE
-         | expr8 lsquare colon RSQUARE
-dictdot : expr8 DOT word
+index       : expr8 lsquare expr RSQUARE
+idxrange    : expr8 lsquare expr space colon expr RSQUARE
+            | expr8 lsquare colon expr RSQUARE
+            | expr8 lsquare expr space colon RSQUARE
+            | expr8 lsquare colon RSQUARE
+dictdot     : expr8 DOT word
 funcrefcall : expr8 space lparen exprlist RPAREN
             | expr8 space lparen RPAREN
 
@@ -40,54 +52,54 @@ expr9 : NUMBER
       | DQSTRING
       | nested
 
-nested : lparen expr RPAREN
-dictionary : lcurly dictlist RCURLY
-           | lcurly RCURLY
-dictlist : dictitem
-         | dictlist comma dictitem
-dictitem : expr space colon expr space
-list : lsquare exprlist RSQUARE
-     | lsquare RSQUARE
-funccall : ident space lparen exprlist RPAREN
-         | ident space lparen RPAREN
-exprlist : expr space
-         | exprlist comma expr space
-variable : ident
-ident : startofident
-      | ident NAMESPACE
-      | ident NUMBER
-      | ident HASH
-      | ident startofident
-word : HEAD
-     | word NUMBER
-     | word HEAD
+nested       : lparen expr RPAREN
+dictionary   : lcurly dictlist RCURLY
+             | lcurly RCURLY
+dictlist     : dictitem
+             | dictlist comma dictitem
+dictitem     : expr space colon expr space
+list         : lsquare exprlist RSQUARE
+             | lsquare RSQUARE
+funccall     : ident space lparen exprlist RPAREN
+             | ident space lparen RPAREN
+exprlist     : expr space
+             | exprlist comma expr space
+variable     : ident
+ident        : startofident
+             | ident NAMESPACE
+             | ident NUMBER
+             | ident HASH
+             | ident startofident
+word         : HEAD
+             | word NUMBER
+             | word HEAD
 startofident : braceident
              | HEAD
-braceident : lcurly expr RCURLY
-number : NUMBER space
-       | FLOAT space
-register : REGISTER space
-option : OPTION space
-envvariable : ENVVAR space
-string : DQSTRING space
-       | SQSTRING space
-lparen : LPAREN space
-rparen : RPAREN space
-lcurly : LCURLY space
-rcurly : RCURLY space
-lsquare : LSQUARE space
-rsquare : RSQUARE space
-comma : COMMA space
-colon : COLON space
-not : NOT space
-and : AND space
-or : OR space
-plus : PLUS space
-minus : MINUS space
-star : STAR space
-mod : MODULE space
-space : # Empty
-      | space WHITE
+braceident   : lcurly expr RCURLY
+number       : NUMBER space
+             | FLOAT space
+register     : REGISTER space
+option       : OPTION space
+envvariable  : ENVVAR space
+string       : DQSTRING space
+             | SQSTRING space
+lparen       : LPAREN space
+rparen       : RPAREN space
+lcurly       : LCURLY space
+rcurly       : RCURLY space
+lsquare      : LSQUARE space
+rsquare      : RSQUARE space
+comma        : COMMA space
+colon        : COLON space
+not          : NOT space
+and          : AND space
+or           : OR space
+plus         : PLUS space
+minus        : MINUS space
+star         : STAR space
+mod          : MODULE space
+space        : # Empty
+             | space WHITE
 end
 
 ---- inner ----

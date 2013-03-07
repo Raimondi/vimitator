@@ -8,7 +8,7 @@ module Vim
       expr = Lexr.that {
         ident = /[a-zA-Z_][a-zA-Z0-9_]*/
         registers = /[-a-zA-Z0-9"_:.%#=*+~\/]/
-        matches /[-+]?\d+\.\d+(e[-+]?\d+)?/ => :FLOAT
+        matches /\d+\.\d+(e[-+]?\d+)?/ => :FLOAT
         matches /(0[xX]?)?\d+/               => :NUMBER
         matches /\(/                          => :LPAREN
         matches /\)/                          => :RPAREN
@@ -31,10 +31,10 @@ module Vim
         matches /&&/                          => :AND
         matches /\|\|/                        => :OR
         matches /[+-.]=/                      => :ASIGN
-        matches /([!=<>]~|is(not)?|[<>])[#?]?/=> :COMPARE
+        matches /([!=<>]~|\bis(not)?\b|[<>])[#?]?/=> :COMPARE
         matches /"(\\.|[^"])*"/               => :DQSTRING
         matches /'(''|[^'])*'/                => :SQSTRING
-        matches /([sbwt]:)?[a-zA-Z_]/          => :HEAD
+        matches /(\b[sbwt]:)?[a-zA-Z_]/       => :HEAD
         matches /@#{registers}/               => :REGISTER
         matches /&#{ident}/                   => :OPTION
         matches /$#{ident}/                   => :ENVVAR
