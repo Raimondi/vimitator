@@ -1,5 +1,7 @@
 #!/usr/bin/env rake
+require "rubygems"
 require "bundler/gem_tasks"
+require "rake"
 
 task :default => [:test]
 
@@ -7,16 +9,12 @@ file 'lib/vimitator/parser.rb' => ['lib/vimitator/parser.racc'] do |t|
   sh "racc -t -v -o #{t.name} #{t.prerequisites.join(' ')}"
 end
 
-task :test => ['lib/vimitator/parser.rb', 'lib/vimitator/scanner.rb'] do |t|
-  errors = []
-  puts "----"
-  puts "Test: #{t.name}"
-  sh "cat #{t.name}"
-  puts "----"
-  sh "./viml < #{t.name}" || errors << t.name
-  puts "Test with errors: #{errors}" unless errors.empty?
+require 'rake/testtask'
+Rake::TestTask.new(:test) do |test|
+  test.libs << 'test'
+  test.pattern = 'test/**/test_*.rb'
+  test.verbose = true
 end
-
 
 
 # test: lib/vim/parser.rb
