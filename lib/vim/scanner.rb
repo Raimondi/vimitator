@@ -39,7 +39,7 @@ module Vim
         matches /&#{ident}/                   => :OPTION
         matches /$#{ident}/                   => :ENVVAR
         matches /#{ident}#/                   => :NAMESPACE
-        matches /[ \t]+/                      => :WHITE
+        #matches /[ \t]+/                      => :WHITE
         ignores /\s*/                         => :EOL
       }
       source.each_line {|line|

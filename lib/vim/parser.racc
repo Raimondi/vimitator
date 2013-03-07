@@ -5,26 +5,26 @@ rule
 
 vimexpr : expr1 END
 expr1 : expr2
-      | expr2 space question expr1 space colon expr1
+      | expr2 question expr1 colon expr1
 
 expr2 : expr3
-      | expr2 space or expr3
+      | expr2 or expr3
 
 expr3 : expr4
-      | expr3 space and expr4
+      | expr3 and expr4
 
 expr4 : expr5
-      | expr4 space compare expr5
+      | expr4 compare expr5
 
 expr5 : expr6
-      | expr5 space expr5op expr6
+      | expr5 expr5op expr6
 
 expr5op : plus
         | minus
         | dot
 
 expr6 : expr7
-      | expr6 space expr6op expr7
+      | expr6 expr6op expr7
 
 expr6op : mod
         | slash
@@ -42,13 +42,13 @@ expr8 : expr9
       | index
 
 index       : expr8 lsquare expr1 RSQUARE
-idxrange    : expr8 lsquare expr1 space colon expr1 RSQUARE
+idxrange    : expr8 lsquare expr1 colon expr1 RSQUARE
             | expr8 lsquare colon expr1 RSQUARE
-            | expr8 lsquare expr1 space colon RSQUARE
+            | expr8 lsquare expr1 colon RSQUARE
             | expr8 lsquare colon RSQUARE
 dictdot     : expr8 DOT word
-funcrefcall : expr8 space lparen exprlist RPAREN
-            | expr8 space lparen RPAREN
+funcrefcall : expr8 lparen exprlist RPAREN
+            | expr8 lparen RPAREN
 
 expr9 : NUMBER
       | FLOAT
@@ -68,13 +68,13 @@ dictionary   : lcurly dictlist RCURLY
              | lcurly RCURLY
 dictlist     : dictitem
              | dictlist comma dictitem
-dictitem     : expr1 space colon expr1 space
+dictitem     : expr1 colon expr1
 list         : lsquare exprlist RSQUARE
              | lsquare RSQUARE
-funccall     : ident space lparen exprlist RPAREN
-             | ident space lparen RPAREN
-exprlist     : expr1 space
-             | exprlist comma expr1 space
+funccall     : ident lparen exprlist RPAREN
+             | ident lparen RPAREN
+exprlist     : expr1
+             | exprlist comma expr1
 variable     : ident
 ident        : startofident
              | ident NAMESPACE
@@ -87,31 +87,30 @@ word         : HEAD
 startofident : braceident
              | HEAD
 braceident   : lcurly expr1 RCURLY
-number       : NUMBER space
-             | FLOAT space
-register     : REGISTER space
-option       : OPTION space
-envvariable  : ENVVAR space
-string       : DQSTRING space
-             | SQSTRING space
-compare      : COMPARE space
-lparen       : LPAREN space
-rparen       : RPAREN space
-lcurly       : LCURLY space
-rcurly       : RCURLY space
-lsquare      : LSQUARE space
-rsquare      : RSQUARE space
-comma        : COMMA space
-colon        : COLON space
-not          : NOT space
-and          : AND space
-or           : OR space
-plus         : PLUS space
-minus        : MINUS space
-star         : STAR space
-mod          : MODULE space
-space        : # Empty
-             | space WHITE
+number       : NUMBER
+             | FLOAT
+register     : REGISTER
+option       : OPTION
+envvariable  : ENVVAR
+string       : DQSTRING
+             | SQSTRING
+compare      : COMPARE
+lparen       : LPAREN
+rparen       : RPAREN
+lcurly       : LCURLY
+rcurly       : RCURLY
+lsquare      : LSQUARE
+rsquare      : RSQUARE
+comma        : COMMA
+colon        : COLON
+not          : NOT
+and          : AND
+or           : OR
+plus         : PLUS
+minus        : MINUS
+star         : STAR
+mod          : MODULE
+
 end
 
 ---- inner ----
