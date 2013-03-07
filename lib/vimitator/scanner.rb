@@ -1,7 +1,6 @@
-require 'rubygems'
 require 'lexr'
 
-module Vim
+module Vimitator
   module Scanner
     def self.scan(source)
       tokens = []

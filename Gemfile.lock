@@ -1,0 +1,18 @@
+PATH
+  remote: .
+  specs:
+    vimitator (0.0.1)
+      lexr (~> 0.3.1)
+      racc (~> 1.4.9)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    lexr (0.3.1)
+    racc (1.4.9)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  vimitator!
