@@ -31,11 +31,11 @@ ADDOP : PLUS   {result = [@lineno, val[0]]}
       | CATDOT
 
 expr6 : expr7
-      | expr6 MULOP expr7       {result = val}
+      | expr6 MULOP expr7       {result = [@lineno, [val[1], [val[0], val[2]]]]}
 
 MULOP : MODULUS
       | SLASH
-      | STAR
+      | STAR   {result = [@lineno, val[0]]}
 
 expr7 : expr8
       | NOT expr7     =UNOT     {result = val}

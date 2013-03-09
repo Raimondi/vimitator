@@ -7,4 +7,4 @@ require 'vimitator'
 #require './vim/peg/code_generator'
 
 rex = Vimitator::Parser.new
-puts rex.scan_str STDIN.read
+puts rex.scan_str(STDIN.read).inspect
