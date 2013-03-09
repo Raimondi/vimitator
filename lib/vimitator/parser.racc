@@ -101,19 +101,19 @@ braceident : LCURLY expr1 RCURLY            {result = val}
 end
 
 ---- inner ----
-  def parse(tokens)
-    @yydebug = true
-    @tokens = tokens
-    do_parse
-  end
+  # def parse(tokens)
+  #   @yydebug = true
+  #   # @tokens = tokens
+  #   do_parse
+  # end
 
   #def on_error( *args )
   #  $stderr.puts "on_error called: args=#{args.inspect}"
   #end
 
-  def next_token
-    token = @tokens.shift
-    #puts "Token: #{token.inspect}"
-    token
-  end
+  # def next_token
+  #   token = @tokens.shift
+  #   #puts "Token: #{token.inspect}"
+  #   token
+  # end
 

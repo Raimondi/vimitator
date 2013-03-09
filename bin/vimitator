@@ -6,7 +6,8 @@ require 'vimitator'
 
 #require './vim/peg/code_generator'
 
-tokens = Vimitator::Scanner.scan(STDIN.read)
-puts tokens.inspect
-ast = Vimitator::Parser.new.parse(tokens)
-puts ast
+tokens = []
+rex = Vimitator::Parser.new
+puts rex.scan_str "123"
+# ast = Vimitator::Parser.new.parse(tokens)
+# puts ast
