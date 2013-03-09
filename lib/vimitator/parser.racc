@@ -24,9 +24,9 @@ expr4 : expr5
       | expr4 CMPOP expr5       {result = val}
 
 expr5 : expr6
-      | expr5 ADDOP expr6       {result = val}
+      | expr5 ADDOP expr6       {result = [@lineno, val]}
 
-ADDOP : PLUS
+ADDOP : PLUS   {result = [@lineno, val]}
       | MINUS
       | CATDOT
 
@@ -57,7 +57,7 @@ dictdot     : expr8 DICDOT word                        {result = val}
 funcrefcall : expr8 LPAREN exprlist RPAREN             {result = val}
             | expr8 LPAREN RPAREN                      {result = val}
 
-expr9 : NUMBER
+expr9 : NUMBER    {result = [@lineno, val]}
       | FLOAT
       | variable
       | funccall
