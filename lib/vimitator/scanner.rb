@@ -42,17 +42,11 @@ module Vimitator
         #matches /[ \t]+/                      => :WHITE
         ignores /\s+/                         => :EOL
       }
-      source.each_line {|line|
-        lexer = expr.new(line)
-        until lexer.end?
-          token = lexer.next
-          #puts token.inspect
-          tokens << token unless token.value.nil?
-        end
-      }
-      # wrap as [id, value] tokens for racc
-      # trailing   end   token recast as   END   for racc
-      tokens.map {|x| [x.type.upcase, x.value] } << [:END, nil]
+      lexer = expr.new(source)
+      until lexer.end?
+        tokens << lexer.next
+      end
+      tokens.map {|x| [x.type.upcase, x.value] }
     end
   end
 end
