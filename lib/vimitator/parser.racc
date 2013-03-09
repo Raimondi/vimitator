@@ -10,7 +10,7 @@ preclow
 
 rule
 
-vimexpr : expr1 END
+vimexpr : expr1
 expr1 : expr2
       | expr2 QUESTION expr1 COLON expr1   {result = val}
 
@@ -100,7 +100,7 @@ braceident : LCURLY expr1 RCURLY            {result = val}
 
 end
 
----- inner ----
+# ---- inner ----
   # def parse(tokens)
   #   @yydebug = true
   #   # @tokens = tokens
