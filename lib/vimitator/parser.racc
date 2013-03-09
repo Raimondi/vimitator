@@ -24,7 +24,7 @@ expr4 : expr5
       | expr4 CMPOP expr5       {result = val}
 
 expr5 : expr6
-      | expr5 ADDOP expr6       {result = [@lineno, val]}
+      | expr5 ADDOP expr6       {result = [@lineno, [val[1], [val[0], val[2]]]]}
 
 ADDOP : PLUS   {result = [@lineno, val[0]]}
       | MINUS
