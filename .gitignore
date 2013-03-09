@@ -11,6 +11,7 @@ doc/
 lib/bundler/man
 lib/vimitator/parser.output
 lib/vimitator/parser.rb
+lib/vimitator/scanner.rb
 pkg
 rdoc
 spec/reports
