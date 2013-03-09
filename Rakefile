@@ -3,8 +3,14 @@ require "rubygems"
 require "bundler/gem_tasks"
 require "rake"
 
-task :default => [:racc, :test]
+task :default => [:rex, :racc, :test]
+
+task :rex  => ['lib/vimitator/scanner.rb']
 task :racc => ['lib/vimitator/parser.rb']
+
+file 'lib/vimitator/scanner.rb' => ['lib/vimitator/scanner.rex'] do |t|
+  sh "rex -o #{t.name} #{t.prerequisites.join(' ')}"
+end
 
 file 'lib/vimitator/parser.rb' => ['lib/vimitator/parser.racc'] do |t|
   sh "racc -t -v -o #{t.name} #{t.prerequisites.join(' ')}"
