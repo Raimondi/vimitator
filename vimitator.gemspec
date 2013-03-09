@@ -17,4 +17,5 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency('racc', "~> 1.4.9")
   gem.add_runtime_dependency('lexr', "~> 0.3.1")
+  gem.add_runtime_dependency('awesome_print', "~> 1.1.0")
 end

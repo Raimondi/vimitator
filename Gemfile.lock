@@ -2,12 +2,14 @@ PATH
   remote: .
   specs:
     vimitator (0.0.1)
+      awesome_print (~> 1.1.0)
       lexr (~> 0.3.1)
       racc (~> 1.4.9)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    awesome_print (1.1.0)
     lexr (0.3.1)
     racc (1.4.9)
 

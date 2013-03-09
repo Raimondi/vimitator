@@ -10,9 +10,10 @@ preclow
 
 rule
 
-vimexpr : expr1
+vimexpr : expr1 {result = [:expr, val[0]]}
 expr1 : expr2
-      | expr2 QUESTION expr1 COLON expr1   {result = val}
+      | expr2 QUESTION expr1 COLON expr1   {result =
+          [@lineno, :ternq, [val[0], [@lineno, :terns, [val[2], val[4]]]]]}
 
 expr2 : expr3
       | expr2 OR expr3          {result = val}
@@ -24,18 +25,20 @@ expr4 : expr5
       | expr4 CMPOP expr5       {result = val}
 
 expr5 : expr6
-      | expr5 ADDOP expr6       {result = [@lineno, [val[1], [val[0], val[2]]]]}
+      | expr5 ADDOP expr6       {result =
+          val[1] << [val[0], val[2]]}
 
-ADDOP : PLUS   {result = [@lineno, val[0]]}
+ADDOP : PLUS   {result = [@lineno, :add]}
       | MINUS
       | CATDOT
 
 expr6 : expr7
-      | expr6 MULOP expr7       {result = [@lineno, [val[1], [val[0], val[2]]]]}
+      | expr6 MULOP expr7       {result =
+          val[1] << [val[0], val[2]]}
 
 MULOP : MODULUS
       | SLASH
-      | STAR   {result = [@lineno, val[0]]}
+      | STAR   {result = [@lineno, :mul]}
 
 expr7 : expr8
       | NOT expr7     =UNOT     {result = val}
@@ -57,63 +60,46 @@ dictdot     : expr8 DICDOT word                        {result = val}
 funcrefcall : expr8 LPAREN exprlist RPAREN             {result = val}
             | expr8 LPAREN RPAREN                      {result = val}
 
-expr9 : NUMBER    {result = [@lineno, val[0]]}
-      | FLOAT
-      | variable
-      | funccall
-      | REGISTER
-      | ENVVAR
+expr9 :
+      | REGISTER {result = [@lineno, :register, val[0]]}
+      | ENVVAR   {result = [@lineno, :envvar, val[0]]}
+      | OPTION   {result = [@lineno, :option, val[0]]}
+      | SQSTRING {result = [@lineno, :sqstring, val[0]]}
+      | DQSTRING {result = [@lineno, :dqstring, val[0]]}
       | list
-      | OPTION
       | dictionary
-      | SQSTRING
-      | DQSTRING
       | nested
+      | funccall
+      | variable  {result = [@lineno, :variable, val[0]]}
+      | FLOAT     {result = [@lineno, :float, val[0]]}
+      | NUMBER    {result = [@lineno, :number, val[0]]}
 
-nested     : LPAREN expr1 RPAREN            {result = val}
-dictionary : LCURLY dictlist RCURLY         {result = val}
-           | LCURLY RCURLY                  {result = val}
+nested     : LPAREN expr1 RPAREN             {result = val}
+dictionary : LCURLY dictlist RCURLY          {result = val}
+           | LCURLY RCURLY                   {result = val}
 dictlist   : dictitem
-           | dictlist COMMA dictitem        {result = val}
-dictitem   : expr1 COLON expr1              {result = val}
-list       : LSQUARE exprlist RSQUARE       {result = val}
-           | LSQUARE RSQUARE                {result = val}
-funccall   : variable LPAREN exprlist RPAREN   {result = val}
-           | variable LPAREN RPAREN            {result = val}
+           | dictlist COMMA dictitem         {result = val}
+dictitem   : expr1 COLON expr1               {result = val}
+list       : LSQUARE exprlist RSQUARE        {result = val}
+           | LSQUARE RSQUARE                 {result = val}
+funccall   : variable LPAREN exprlist RPAREN {result = val}
+           | variable LPAREN RPAREN          {result = val}
 exprlist   : expr1
-           | exprlist COMMA expr1           {result = val}
+           | exprlist COMMA expr1            {result = val}
 variable   : startofident
-           | variable NUMBER                   {result = val}
-           | variable namespace                {result = val}
-           | variable startofident             {result = val}
-           # ^-- these don't look right  XXX
+           | variable NUMBER                 {result = val[0] + val[1].to_s}
+           | variable namespace              {result = val[0] + val[1]}
+           | variable startofident           {result = val[0] + val[1]}
+
 namespace : HASH wordchar
           | HASH braceident
           # ^-- that doesn't look right  XXX
-word : wordchar                       {result = val}
-     | word wordchar                  {result = val}
+word : wordchar                              {result = val}
+     | word wordchar                         {result = val}
 wordchar : NUMBER
          | HEAD
 startofident : braceident
              | HEAD
-braceident : LCURLY expr1 RCURLY            {result = val}
+braceident : LCURLY variable RCURLY             {result = val.join}
 
 end
-
-# ---- inner ----
-  # def parse(tokens)
-  #   @yydebug = true
-  #   # @tokens = tokens
-  #   do_parse
-  # end
-
-  #def on_error( *args )
-  #  $stderr.puts "on_error called: args=#{args.inspect}"
-  #end
-
-  # def next_token
-  #   token = @tokens.shift
-  #   #puts "Token: #{token.inspect}"
-  #   token
-  # end
-
