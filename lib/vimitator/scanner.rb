@@ -1,3 +1,4 @@
+module Vimitator
 class Scanner
 macro
   IDENT [a-zA-Z_][a-zA-Z0-9_]*
@@ -39,4 +40,5 @@ rule
   {IDENT} { [:IDENTIFIER, text] }
   \s+
 inner
+end
 end
