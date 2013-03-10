@@ -1,8 +1,8 @@
 module Vimitator
   module Nodes
     class Node
-      # include Vimitator::Visitable
-      # include Vimitator::Visitors
+      include Vimitator::Visitable
+      include Vimitator::Visitors
       include Enumerable
 
       attr_accessor :value, :comments, :line, :filename
@@ -68,16 +68,16 @@ edge [ ];
         "#{header}\n#{nodes}\n#{arrows}\n}"
       end
 
-      # def each(&block)
-      #   EnumerableVisitor.new(block).accept(self)
-      # end
+      def each(&block)
+        EnumerableVisitor.new(block).accept(self)
+      end
 
       # def to_real_sexp
       #   RealSexpVisitor.new.accept(self)
       # end
     end
 
-    %w[Number].each do |node|
+    %w[ExpressionStatement Number ].each do |node|
       eval "class #{node}Node < Node; end"
     end
   end

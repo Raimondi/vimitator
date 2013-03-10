@@ -10,7 +10,8 @@ preclow
 
 rule
 
-vimexpr : expr1 {result = [:expr, val[0]]}
+vimexpr : expr1 { result = ExpressionStatementNode.new(val.first) }
+
 expr1 : expr2
       | expr2 QUESTION expr1 COLON expr1   {
           result = ConditionalNode.new(val[0], val[2], val[4])

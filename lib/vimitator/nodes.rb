@@ -1,5 +1,4 @@
 require 'vimitator/nodes/node'
-require 'vimitator/nodes/binary_node'
-require 'vimitator/nodes/if_node'
-require 'vimitator/nodes/conditional_node'
-require 'vimitator/nodes/op_equal_node'
+Dir[File.join(File.dirname(__FILE__), "nodes/*_node.rb")].each do |file|
+  require file[/vimitator\/nodes\/.*/]
+end

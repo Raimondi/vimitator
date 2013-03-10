@@ -12,4 +12,7 @@ rex = Vimitator::Parser.new
 
 # ap rex.scan_str(STDIN.read)
 # puts rex.scan_str(STDIN.read)
-puts rex.scan_str(STDIN.read).inspect
+ast = rex.scan_str(STDIN.read)
+# puts ast.inspect
+dots = ast.to_dots
+puts dots
