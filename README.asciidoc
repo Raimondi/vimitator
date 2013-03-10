@@ -21,9 +21,8 @@ Or install it yourself as:
 Usage
 ~~~~~
 
-  vimitator somefile.vim
-
-Generates a CST in s-expression format.
+  echo '1+2 ? 3*4 : 5/6' | ./bin/vimitator > expr.dot
+  dot -Tpng -O expr.dot
 
 ## Contributing
 
