@@ -1,0 +1,5 @@
+require 'vimitator/nodes/node'
+require 'vimitator/nodes/binary_node'
+require 'vimitator/nodes/if_node'
+require 'vimitator/nodes/conditional_node'
+require 'vimitator/nodes/op_equal_node'
