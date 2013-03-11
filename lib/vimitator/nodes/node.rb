@@ -77,7 +77,7 @@ edge [ ];
       # end
     end
 
-    %w[ExpressionStatement Number ].each do |node|
+    %w[ExpressionStatement Number Parameter].each do |node|
       eval "class #{node}Node < Node; end"
     end
   end

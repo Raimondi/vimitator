@@ -9,7 +9,7 @@ module Vimitator
     end
 
     %w[Catenate Subtract LessOrEqual GreaterOrEqual Add Multiply NotEqual
-       DoWhile Switch LogicalAnd UnsignedRightShift Modulus While
+       DoWhile Switch LogicalAnd UnsignedRightShift Modulus While Let
        NotStrictEqual Less With In Greater BitOr StrictEqual LogicalOr
        BitXOr LeftShift Equal BitAnd InstanceOf Divide RightShift].each do |node|
       const_set "#{node}Node", Class.new(BinaryNode)

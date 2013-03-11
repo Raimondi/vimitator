@@ -1,4 +1,3 @@
-# vim:set ft=ruby:
 class Vimitator::Parser
 
 prechigh
@@ -9,6 +8,8 @@ prechigh
 preclow
 
 rule
+
+let : LET variable ASSIGN vimexpr { result = LetNode.new(val[1], val[3]);puts result.inspect }
 
 vimexpr : expr1 { result = ExpressionStatementNode.new(val.first) }
 
@@ -67,7 +68,7 @@ expr9 :
       | dictionary
       | nested
       | funccall
-      | variable  {result = [:variable, val[0]]}
+      | variable
       | FLOAT     { result = NumberNode.new(val.first) }
       | NUMBER    { result = NumberNode.new(val.first) }
 
@@ -79,14 +80,15 @@ dictlist   : dictitem
 dictitem   : expr1 COLON expr1               {result = val}
 list       : LSQUARE exprlist RSQUARE        {result = val}
            | LSQUARE RSQUARE                 {result = val}
-funccall   : variable LPAREN exprlist RPAREN {result = val}
-           | variable LPAREN RPAREN          {result = val}
+funccall   : ident LPAREN exprlist RPAREN {result = val}
+           | ident LPAREN RPAREN          {result = val}
 exprlist   : expr1
            | exprlist COMMA expr1            {result = val}
-variable   : startofident
-           | variable NUMBER                 {result = val[0] + val[1].to_s}
-           | variable namespace              {result = val[0] + val[1]}
-           | variable startofident           {result = val[0] + val[1]}
+variable : ident                   { result = ParameterNode.new(val.join) }
+ident   : startofident
+           | ident NUMBER                 {result = val[0] + val[1].to_s}
+           | ident namespace              {result = val[0] + val[1]}
+           | ident startofident           {result = val[0] + val[1]}
 
 namespace : HASH wordchar
           | HASH braceident

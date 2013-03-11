@@ -69,7 +69,7 @@ module Vimitator
         OpMinusEqualNode OpModEqualNode OpMultiplyEqualNode OpOrEqualNode
         OpPlusEqualNode OpRShiftEqualNode OpURShiftEqualNode OpXOrEqualNode
         RightShiftNode StrictEqualNode SubtractNode SwitchNode
-        UnsignedRightShiftNode WhileNode WithNode
+        UnsignedRightShiftNode WhileNode WithNode LetNode
       }.each do |type|
         define_method(:"visit_#{type}") do |o|
           node = Node.new(@node_index += 1, [type])

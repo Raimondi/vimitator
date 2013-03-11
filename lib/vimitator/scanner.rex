@@ -5,6 +5,7 @@ macro
   DIGIT     \d+
   REGISTERS [-a-zA-Z0-9"_:.%=*+~\/]
 rule
+  let\b                  { [:LET, text] }
   \d+\.\d+(e[-+]?\d+)?   { [:FLOAT, text.to_f] }
   {DIGIT}                { [:NUMBER, text.to_i] }
   (0[xX]?)?\d+           { [:NUMBER, text] }
@@ -29,7 +30,7 @@ rule
   !                      { [:NOT, text] }
   &&                     { [:AND, text] }
   \|\|                   { [:OR, text] }
-  [+-.]=                 { [:ASSIGN, text] }
+  [+-.]?=                { [:ASSIGN, text] }
   ([!=<>]~|\bis(not)?\b|[<>])[#?]?  { [:CMPOP, text] }
   "(\\.|[^"])*"          { [:DQSTRING, text] }
   '(''|[^'])*'           { [:SQSTRING, text] }
