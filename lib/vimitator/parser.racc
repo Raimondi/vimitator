@@ -26,7 +26,7 @@ statement: variable_statement
 
 variable_statement :
   LET variable_declaration {
-    result = VarStatementNode.new(val[1])
+    result = VarStatementNode.new([val[1]])
     # debug(result)
   }
 
