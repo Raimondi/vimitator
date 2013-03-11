@@ -77,7 +77,8 @@ edge [ ];
       # end
     end
 
-    %w[ExpressionStatement Number Parameter].each do |node|
+    %w[ExpressionStatement SourceElements Number AssignExpr VarStatement
+      ].each do |node|
       eval "class #{node}Node < Node; end"
     end
   end

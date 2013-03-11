@@ -69,7 +69,7 @@ module Vimitator
         OpMinusEqualNode OpModEqualNode OpMultiplyEqualNode OpOrEqualNode
         OpPlusEqualNode OpRShiftEqualNode OpURShiftEqualNode OpXOrEqualNode
         RightShiftNode StrictEqualNode SubtractNode SwitchNode
-        UnsignedRightShiftNode WhileNode WithNode LetNode
+        UnsignedRightShiftNode WhileNode WithNode
       }.each do |type|
         define_method(:"visit_#{type}") do |o|
           node = Node.new(@node_index += 1, [type])
@@ -86,7 +86,7 @@ module Vimitator
       # Array Value Nodes
       %w{
         ArgumentsNode ArrayNode CaseBlockNode ConstStatementNode
-        ObjectLiteralNode SourceElementsNode VarStatementNode
+        ObjectLiteralNode SourceElementsNode 
       }.each do |type|
         define_method(:"visit_#{type}") do |o|
           node = Node.new(@node_index += 1, [type])

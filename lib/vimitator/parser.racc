@@ -9,9 +9,41 @@ preclow
 
 rule
 
-let : LET variable ASSIGN vimexpr { result = LetNode.new(val[1], val[3]);puts result.inspect }
+# let : LET variable ASSIGN vimexpr { result = LetNode.new(val[1], val[3]);puts result.inspect }
 
-vimexpr : expr1 { result = ExpressionStatementNode.new(val.first) }
+source_elements:
+    /* nothing */         { result = SourceElementsNode.new([]) }
+  | source_element_list   { result = SourceElementsNode.new([val].flatten) }
+
+source_element_list :
+    source_element
+  | source_element_list source_element {result = val.flatten}
+
+source_element :
+    statement
+
+statement: variable_statement
+
+variable_statement :
+  LET variable_declaration {
+    result = VarStatementNode.new(val[1])
+    # debug(result)
+  }
+
+variable_declaration :
+  variable initializer {
+    result = VarDeclNode.new(val.first, val[1])
+  }
+
+# FIXME: include actual ASSIGN in AssignExprNode()
+initializer : ASSIGN vimexpr {
+    result = AssignExprNode.new(val[1])
+  }
+
+# XXX: Dunno if we should keep ExpressionStatementNode() here or not...?
+# rkelly doesn't use ExpressionStatementNode() in a var decl...
+# vimexpr : expr1 { result = ExpressionStatementNode.new(val.first) }
+vimexpr : expr1 { result = val.first }
 
 expr1 : expr2
       | expr2 QUESTION expr1 COLON expr1   {
@@ -83,8 +115,8 @@ list       : LSQUARE exprlist RSQUARE        {result = val}
 funccall   : ident LPAREN exprlist RPAREN {result = val}
            | ident LPAREN RPAREN          {result = val}
 exprlist   : expr1
-           | exprlist COMMA expr1            {result = val}
-variable : ident                   { result = ParameterNode.new(val.join) }
+           | exprlist COMMA expr1         {result = val}
+variable : ident                          {result = val}
 ident   : startofident
            | ident NUMBER                 {result = val[0] + val[1].to_s}
            | ident namespace              {result = val[0] + val[1]}

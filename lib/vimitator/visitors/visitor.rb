@@ -16,7 +16,7 @@ module Vimitator
         OpDivideEqual OpEqual OpLShiftEqual OpMinusEqual OpModEqual
         OpMultiplyEqual OpOrEqual OpPlusEqual OpRShiftEqual OpURShiftEqual
         OpXOrEqual RightShift StrictEqual Subtract Switch UnsignedRightShift
-        While With Let
+        While With
       }
       ARRAY_VALUE_NODES = %w{
         Arguments Array CaseBlock ConstStatement ObjectLiteral SourceElements
