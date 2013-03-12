@@ -19,6 +19,10 @@ rule
   :                      { [:COLON, text] }
   ;                      { [:SEMICOLON, text] }
   #                      { [:HASH, text] }
+  =                      { [:ASSIGN, text] }
+  \+=                     { [:PLUSASSIGN, text] }
+  -=                     { [:MINUSASSIGN, text] }
+  \.=                     { [:DOTASSIGN, text] }
   (?<!\s)\.(?!\s)        { [:DICDOT, text] }
   \.                     { [:CATDOT, text] }
   \+                     { [:PLUS, text] }
@@ -31,10 +35,6 @@ rule
   &&                     { [:AND, text] }
   \|\|                   { [:OR, text] }
   ([!=<>]~|\bis(not)?\b|[<>])[#?]?  { [:CMPOP, text] }
-  =                      { [:ASSIGN, text] }
-  \+=                     { [:PLUSASSIGN, text] }
-  -=                     { [:MINUSASSIGN, text] }
-  \.=                     { [:DOTASSIGN, text] }
   "(\\.|[^"])*"          { [:DQSTRING, text] }
   '(''|[^'])*'           { [:SQSTRING, text] }
   (\b[sbwt]:)?[a-zA-Z_]  { [:HEAD, text] }
