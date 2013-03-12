@@ -3,7 +3,7 @@ require "rubygems"
 require "bundler/gem_tasks"
 require "rake"
 
-task :default => :test
+task :default => [:rex, :racc]
 
 task :rex  => ['lib/vimitator/scanner.rb']
 task :racc => ['lib/vimitator/parser.rb']
