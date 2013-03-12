@@ -9,125 +9,202 @@ preclow
 
 rule
 
-source_elements:
-    /* nothing */         { result = SourceElementsNode.new([]) }
-  | source_element_list   { result = SourceElementsNode.new([val].flatten) }
+  SourceElements:
+    /* nothing */        { result = SourceElementsNode.new([]) }
+  | Source_elementList   { result = SourceElementsNode.new([val].flatten) }
+  ;
 
-source_element_list :
-    source_element
-  | source_element_list source_element {result = val.flatten}
+  Source_elementList:
+    SourceElement
+  | Source_elementList SourceElement {result = val.flatten}
+  ;
 
-source_element :
-    statement
+  SourceElement:
+    Statement
+  ;
 
-statement: variable_statement
+  Statement:
+    VariableStatement
+  ;
 
-variable_statement :
-  assignment_expression {
-    result = ExpressionStatementNode.new(val.first)
-    # debug(result)
-  }
+  VariableStatement:
+    AssignmentExpression {
+      result = ExpressionStatementNode.new(val.first)
+      # debug(result)
+    }
+  ;
 
-assignment_expression :  LET variable assignment_operator vimexpr {
+  AssignmentExpression:
+    LET Variable AssignmentOperator Vimexpr {
     result = val[2].new(val[1], val.last)
-  }
+    }
+  ;
 
-assignment_operator : ASSIGN      { result = OpEqualNode      }
-                    | PLUSASSIGN  { result = OpPlusEqualNode  }
-                    | MINUSASSIGN { result = OpMinusEqualNode }
-                    | DOTASSIGN   { result = OpDotEqualNode   }
-# XXX: Dunno if we should keep ExpressionStatementNode() here or not...?
-# rkelly doesn't use ExpressionStatementNode() in a var decl...
-# vimexpr : expr1 { result = ExpressionStatementNode.new(val.first) }
-vimexpr : expr1 { result = val.first }
+  AssignmentOperator:
+    ASSIGN      { result = OpEqualNode      }
+  | PLUSASSIGN  { result = OpPlusEqualNode  }
+  | MINUSASSIGN { result = OpMinusEqualNode }
+  | DOTASSIGN   { result = OpDotEqualNode   }
+  ;
 
-expr1 : expr2
-      | expr2 QUESTION expr1 COLON expr1   {
-          result = ConditionalNode.new(val[0], val[2], val[4])
-        }
+  Vimexpr:
+    Expr1 { result = val.first }
+  ;
 
-expr2 : expr3
-      | expr2 OR expr3          {result = val}
+  Expr1:
+    Expr2
+  | Expr2 QUESTION Expr1 COLON Expr1   {
+            result = ConditionalNode.new(val[0], val[2], val[4])
+          }
+  ;
 
-expr3 : expr4
-      | expr3 AND expr4         {result = val}
+  Expr2:
+    Expr3
+  | Expr2 OR Expr3          {result = val}
+  ;
 
-expr4 : expr5
-      | expr4 CMPOP expr5       {result = val}
+  Expr3:
+    Expr4
+  | Expr3 AND Expr4         {result = val}
+  ;
 
-expr5 : expr6
-      | expr5 CATDOT expr6     { result = CatenateNode.new(val[0],val[2])}
-      | expr5 MINUS expr6      { result = SubtractNode.new(val[0],val[2])}
-      | expr5 PLUS expr6       { result = AddNode.new(val[0],val[2])}
+  Expr4:
+    Expr5
+  | Expr4 CMPOP Expr5       {result = val}
+  ;
+
+  Expr5:
+    Expr6
+  | Expr5 CATDOT Expr6     { result = CatenateNode.new(val[0],val[2])}
+  | Expr5 MINUS Expr6      { result = SubtractNode.new(val[0],val[2])}
+  | Expr5 PLUS Expr6       { result = AddNode.new(val[0],val[2])}
+  ;
 
 
-expr6 : expr7
-      | expr6 MODULUS expr7    { result = ModulusNode.new(val[0],val[2])}
-      | expr6 SLASH expr7      { result = DivideNode.new(val[0],val[2])}
-      | expr6 STAR expr7       { result = MultiplyNode.new(val[0],val[2])}
+  Expr6:
+    Expr7
+  | Expr6 MODULUS Expr7    { result = ModulusNode.new(val[0],val[2])}
+  | Expr6 SLASH Expr7      { result = DivideNode.new(val[0],val[2])}
+  | Expr6 STAR Expr7       { result = MultiplyNode.new(val[0],val[2])}
+  ;
 
-expr7 : expr8
-      | NOT expr7     =UNOT     {result = val}
-      | MINUS expr7   =UMINUS   {result = val}
-      | PLUS expr7    =UPLUS    {result = val}
+  Expr7:
+    Expr8
+  | NOT Expr7     =UNOT     {result = val}
+  | MINUS Expr7   =UMINUS   {result = val}
+  | PLUS Expr7    =UPLUS    {result = val}
+  ;
 
-expr8 : expr9
-      | funcrefcall
-      | dictdot
-      | idxrange
-      | index
+  Expr8:
+    Expr9
+  | Funcrefcall
+  | Dictdot
+  | Idxrange
+  | Index
+  ;
 
-index       : expr8 LSQUARE expr1 RSQUARE              {result = val}
-idxrange    : expr8 LSQUARE expr1 COLON expr1 RSQUARE  {result = val}
-            | expr8 LSQUARE COLON expr1 RSQUARE        {result = val}
-            | expr8 LSQUARE expr1 COLON RSQUARE        {result = val}
-            | expr8 LSQUARE COLON RSQUARE              {result = val}
-dictdot     : expr8 DICDOT word                        {result = val}
-funcrefcall : expr8 LPAREN exprlist RPAREN             {result = val}
-            | expr8 LPAREN RPAREN                      {result = val}
+  Index:
+    Expr8 LSQUARE Expr1 RSQUARE              {result = val}
+  ;
 
-expr9 :
-      | REGISTER {result = [:register, val[0]]}
-      | ENVVAR   {result = [:envvar, val[0]]}
-      | OPTION   {result = [:option, val[0]]}
-      | SQSTRING {result = [:sqstring, val[0]]}
-      | DQSTRING {result = [:dqstring, val[0]]}
-      | list
-      | dictionary
-      | nested
-      | funccall
-      | variable
-      | FLOAT     { result = NumberNode.new(val.first) }
-      | NUMBER    { result = NumberNode.new(val.first) }
+  Idxrange:
+    Expr8 LSQUARE Expr1 COLON Expr1 RSQUARE  {result = val}
+  | Expr8 LSQUARE COLON Expr1 RSQUARE        {result = val}
+  | Expr8 LSQUARE Expr1 COLON RSQUARE        {result = val}
+  | Expr8 LSQUARE COLON RSQUARE              {result = val}
+  ;
 
-nested     : LPAREN expr1 RPAREN             {result = val}
-dictionary : LCURLY dictlist RCURLY          {result = val}
-           | LCURLY RCURLY                   {result = val}
-dictlist   : dictitem
-           | dictlist COMMA dictitem         {result = val}
-dictitem   : expr1 COLON expr1               {result = val}
-list       : LSQUARE exprlist RSQUARE        {result = val}
-           | LSQUARE RSQUARE                 {result = val}
-funccall   : ident LPAREN exprlist RPAREN {result = val}
-           | ident LPAREN RPAREN          {result = val}
-exprlist   : expr1
-           | exprlist COMMA expr1         {result = val}
-variable : ident                          {result = ResolveNode.new(val.join)}
-ident   : startofident
-           | ident NUMBER                 {result = val[0] + val[1].to_s}
-           | ident namespace              {result = val[0] + val[1]}
-           | ident startofident           {result = val[0] + val[1]}
+  Dictdot:
+    Expr8 DICDOT Word                        {result = val}
+  ;
 
-namespace : HASH wordchar
-          | HASH braceident
-          # ^-- that doesn't look right  XXX
-word : wordchar                              {result = val}
-     | word wordchar                         {result = val}
-wordchar : NUMBER
-         | HEAD
-startofident : braceident
-             | HEAD
-braceident : LCURLY variable RCURLY             {result = val.join}
+  Funcrefcall:
+    Expr8 LPAREN Exprlist RPAREN             {result = val}
+  | Expr8 LPAREN RPAREN                      {result = val}
+  ;
+
+  Expr9:
+  | REGISTER {result = [:register, val[0]]}
+  | ENVVAR   {result = [:envvar, val[0]]}
+  | OPTION   {result = [:option, val[0]]}
+  | SQSTRING {result = [:sqstring, val[0]]}
+  | DQSTRING {result = [:dqstring, val[0]]}
+  | List
+  | Dictionary
+  | Nested
+  | Funccall
+  | Variable
+  | FLOAT     { result = NumberNode.new(val.first) }
+  | NUMBER    { result = NumberNode.new(val.first) }
+  ;
+
+  Nested:
+    LPAREN Expr1 RPAREN             {result = val}
+  ;
+
+  Dictionary:
+    LCURLY Dictlist RCURLY          {result = val}
+  | LCURLY RCURLY                   {result = val}
+  ;
+
+  Dictlist:
+    Dictitem
+  | Dictlist COMMA Dictitem         {result = val}
+  ;
+
+  Dictitem:
+    Expr1 COLON Expr1               {result = val}
+  ;
+
+  List:
+    LSQUARE Exprlist RSQUARE        {result = val}
+  | LSQUARE RSQUARE                 {result = val}
+  ;
+
+  Funccall:
+    Ident LPAREN Exprlist RPAREN {result = val}
+  | Ident LPAREN RPAREN          {result = val}
+  ;
+
+  Exprlist:
+    Expr1
+  | Exprlist COMMA Expr1         {result = val}
+  ;
+
+  Variable:
+    Ident                          {result = ResolveNode.new(val.join)}
+  ;
+
+  Ident:
+    Startofident
+  | Ident NUMBER                 {result = val[0] + val[1].to_s}
+  | Ident Namespace              {result = val[0] + val[1]}
+  | Ident Startofident           {result = val[0] + val[1]}
+  ;
+
+  Namespace:
+    HASH Wordchar
+  | HASH Braceident
+  ;
+
+  Word:
+    Wordchar                              {result = val}
+  | Word Wordchar                         {result = val}
+  ;
+
+  Wordchar:
+    NUMBER
+  | HEAD
+  ;
+
+  Startofident:
+    Braceident
+  | HEAD
+  ;
+
+  Braceident:
+    LCURLY Variable RCURLY             {result = val.join}
+  ;
 
 end
 
