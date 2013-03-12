@@ -12,7 +12,7 @@ file 'lib/vimitator/scanner.rb' => ['lib/vimitator/scanner.rex'] do |t|
   sh "rex -o #{t.name} #{t.prerequisites.join(' ')}"
 end
 
-file 'lib/vimitator/parser.rb' => ['lib/vimitator/parser.racc'] do |t|
+file 'lib/vimitator/parser.rb' => ['lib/vimitator/parser.y'] do |t|
   sh "racc -t -v -o #{t.name} #{t.prerequisites.join(' ')}"
 end
 
