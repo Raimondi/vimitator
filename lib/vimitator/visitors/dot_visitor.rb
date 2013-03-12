@@ -60,15 +60,15 @@ module Vimitator
       # End Single value nodes
 
       # Binary nodes
-      %w{
+      %w{ 
         AddNode BitAndNode BitOrNode BitXOrNode CaseClauseNode CommaNode
         DivideNode DoWhileNode EqualNode GreaterNode GreaterOrEqualNode InNode
         InstanceOfNode LeftShiftNode LessNode LessOrEqualNode LogicalAndNode
         LogicalOrNode ModulusNode MultiplyNode NotEqualNode NotStrictEqualNode
         OpAndEqualNode OpDivideEqualNode OpEqualNode OpLShiftEqualNode
         OpMinusEqualNode OpModEqualNode OpMultiplyEqualNode OpOrEqualNode
-        OpPlusEqualNode OpRShiftEqualNode OpURShiftEqualNode OpXOrEqualNode
-        RightShiftNode StrictEqualNode SubtractNode SwitchNode
+        OpPlusEqualNode OpDotEqualNode OpRShiftEqualNode OpURShiftEqualNode
+        OpXOrEqualNode RightShiftNode StrictEqualNode SubtractNode SwitchNode
         UnsignedRightShiftNode WhileNode WithNode
       }.each do |type|
         define_method(:"visit_#{type}") do |o|

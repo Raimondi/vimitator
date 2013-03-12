@@ -9,8 +9,6 @@ preclow
 
 rule
 
-# let : LET variable ASSIGN vimexpr { result = LetNode.new(val[1], val[3]);puts result.inspect }
-
 source_elements:
     /* nothing */         { result = SourceElementsNode.new([]) }
   | source_element_list   { result = SourceElementsNode.new([val].flatten) }
@@ -25,21 +23,19 @@ source_element :
 statement: variable_statement
 
 variable_statement :
-  LET variable_declaration {
-    result = VarStatementNode.new([val[1]])
+  assignment_expression {
+    result = ExpressionStatementNode.new(val.first)
     # debug(result)
   }
 
-variable_declaration :
-  variable initializer {
-    result = VarDeclNode.new(val.first, val[1])
+assignment_expression :  LET variable assignment_operator vimexpr {
+    result = val[2].new(val[1], val.last)
   }
 
-# FIXME: include actual ASSIGN in AssignExprNode()
-initializer : ASSIGN vimexpr {
-    result = AssignExprNode.new(val[1])
-  }
-
+assignment_operator : ASSIGN      { result = OpEqualNode      }
+                    | PLUSASSIGN  { result = OpPlusEqualNode  }
+                    | MINUSASSIGN { result = OpMinusEqualNode }
+                    | DOTASSIGN   { result = OpDotEqualNode   }
 # XXX: Dunno if we should keep ExpressionStatementNode() here or not...?
 # rkelly doesn't use ExpressionStatementNode() in a var decl...
 # vimexpr : expr1 { result = ExpressionStatementNode.new(val.first) }
@@ -116,7 +112,7 @@ funccall   : ident LPAREN exprlist RPAREN {result = val}
            | ident LPAREN RPAREN          {result = val}
 exprlist   : expr1
            | exprlist COMMA expr1         {result = val}
-variable : ident                          {result = val}
+variable : ident                          {result = ResolveNode.new(val.join)}
 ident   : startofident
            | ident NUMBER                 {result = val[0] + val[1].to_s}
            | ident namespace              {result = val[0] + val[1]}

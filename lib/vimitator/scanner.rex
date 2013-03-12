@@ -30,8 +30,11 @@ rule
   !                      { [:NOT, text] }
   &&                     { [:AND, text] }
   \|\|                   { [:OR, text] }
-  [+-.]?=                { [:ASSIGN, text] }
   ([!=<>]~|\bis(not)?\b|[<>])[#?]?  { [:CMPOP, text] }
+  =                      { [:ASSIGN, text] }
+  \+=                     { [:PLUSASSIGN, text] }
+  -=                     { [:MINUSASSIGN, text] }
+  \.=                     { [:DOTASSIGN, text] }
   "(\\.|[^"])*"          { [:DQSTRING, text] }
   '(''|[^'])*'           { [:SQSTRING, text] }
   (\b[sbwt]:)?[a-zA-Z_]  { [:HEAD, text] }

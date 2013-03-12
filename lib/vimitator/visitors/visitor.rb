@@ -14,9 +14,9 @@ module Vimitator
         GreaterOrEqual In InstanceOf LeftShift Less LessOrEqual LogicalAnd
         LogicalOr Modulus Multiply NotEqual NotStrictEqual OpAndEqual
         OpDivideEqual OpEqual OpLShiftEqual OpMinusEqual OpModEqual
-        OpMultiplyEqual OpOrEqual OpPlusEqual OpRShiftEqual OpURShiftEqual
-        OpXOrEqual RightShift StrictEqual Subtract Switch UnsignedRightShift
-        While With
+        OpMultiplyEqual OpOrEqual OpPlusEqual OpDotEqual OpRShiftEqual
+        OpURShiftEqual OpXOrEqual RightShift StrictEqual Subtract Switch
+        UnsignedRightShift While With
       }
       ARRAY_VALUE_NODES = %w{
         Arguments Array CaseBlock ConstStatement ObjectLiteral SourceElements
