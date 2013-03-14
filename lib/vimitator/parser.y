@@ -162,24 +162,28 @@ rule
   ;
 
   Funccall:
-    Ident LPAREN Exprlist RPAREN {result = val}
-  | Ident LPAREN RPAREN          {result = val}
+    Variable LPAREN Exprlist RPAREN {
+      result = FunctionCallNode.new(val.first, ArgumentsNode.new(val[2]))
+    }
+  | Variable LPAREN RPAREN          {
+      result = FunctionCallNode.new(val.first, ArgumentsNode.new([]))
+    }
   ;
 
   Exprlist:
-    Expr1
-  | Exprlist COMMA Expr1         {result = val}
+    Expr1                        {result = val}
+  | Exprlist COMMA Expr1         {result = [val.first, val[2]].flatten}
   ;
 
   Variable:
-    Ident                          {result = ResolveNode.new(val.join)}
+    Ident                           {result = ResolveNode.new(val.join)}
   ;
 
   Ident:
-    Startofident
-  | Ident NUMBER                 {result = val[0] + val[1].to_s}
-  | Ident Namespace              {result = val[0] + val[1]}
-  | Ident Startofident           {result = val[0] + val[1]}
+    Startofident                    {result = val.first}
+  | Ident NUMBER                    {result = val[0] + val[1].to_s}
+  | Ident Namespace                 {result = val[0] + val[1]}
+  | Ident Startofident              {result = val[0] + val[1]}
   ;
 
   Namespace:
