@@ -11,12 +11,12 @@ rule
 
   SourceElements:
     /* nothing */        { result = SourceElementsNode.new([]) }
-  | Source_elementList   { result = SourceElementsNode.new([val].flatten) }
+  | SourceElementList   { result = SourceElementsNode.new([val].flatten) }
   ;
 
-  Source_elementList:
+  SourceElementList:
     SourceElement
-  | Source_elementList SourceElement {result = val.flatten}
+  | SourceElementList SourceElement {result = val.flatten}
   ;
 
   SourceElement:
@@ -35,7 +35,7 @@ rule
   ;
 
   AssignmentExpression:
-    LET Variable AssignmentOperator Vimexpr {
+    LET Variable AssignmentOperator VimExpr {
     result = val[2].new(val[1], val.last)
     }
   ;
@@ -47,7 +47,7 @@ rule
   | DOTASSIGN   { result = OpDotEqualNode   }
   ;
 
-  Vimexpr:
+  VimExpr:
     Expr1 { result = val.first }
   ;
 
@@ -97,9 +97,9 @@ rule
 
   Expr8:
     Expr9
-  | Funcrefcall
-  | Dictdot
-  | Idxrange
+  | FuncRefCall
+  | DictDot
+  | IdxRange
   | Index
   ;
 
@@ -107,18 +107,18 @@ rule
     Expr8 LSQUARE Expr1 RSQUARE              {result = val}
   ;
 
-  Idxrange:
+  IdxRange:
     Expr8 LSQUARE Expr1 COLON Expr1 RSQUARE  {result = val}
   | Expr8 LSQUARE COLON Expr1 RSQUARE        {result = val}
   | Expr8 LSQUARE Expr1 COLON RSQUARE        {result = val}
   | Expr8 LSQUARE COLON RSQUARE              {result = val}
   ;
 
-  Dictdot:
+  DictDot:
     Expr8 DICDOT Word                        {result = val}
   ;
 
-  Funcrefcall:
+  FuncRefCall:
     Expr8 LPAREN ArgList RPAREN             {result = val}
   | Expr8 LPAREN RPAREN                      {result = val}
   ;
@@ -132,7 +132,7 @@ rule
   | List
   | Dictionary
   | Nested
-  | Funccall
+  | FuncCall
   | Variable
   | FLOAT     { result = NumberNode.new(val.first) }
   | NUMBER    { result = NumberNode.new(val.first) }
@@ -172,7 +172,7 @@ rule
   | ExprList COMMA Expr1         {result = [val.first, ElementNode.new(val[2])].flatten}
   ;
 
-  Funccall:
+  FuncCall:
     Variable LPAREN ArgList RPAREN {
       result = FunctionCallNode.new(val.first, ArgumentsNode.new(val[2]))
     }
@@ -191,20 +191,20 @@ rule
   ;
 
   Ident:
-    Startofident                    {result = val.first}
+    StartOfIdent                    {result = val.first}
   | Ident NUMBER                    {result = val[0] + val[1].to_s}
-  | Ident Namespace                 {result = val[0] + val[1]}
-  | Ident Startofident              {result = val[0] + val[1]}
+  | Ident NameSpace                 {result = val[0] + val[1]}
+  | Ident StartOfIdent              {result = val[0] + val[1]}
   ;
 
-  Namespace:
-    HASH Wordchar
-  | HASH Braceident
+  NameSpace:
+    HASH WordChar
+  | HASH BraceIdent
   ;
 
   Word:
-    Wordchar                              {result = val}
-  | Word Wordchar                         {result = val}
+    WordChar                              {result = val}
+  | Word WordChar                         {result = val}
   ;
 
   Wordchar:
@@ -212,8 +212,8 @@ rule
   | HEAD
   ;
 
-  Startofident:
-    Braceident
+  StartOfIdent:
+    BraceIdent
   | HEAD
   ;
 
@@ -222,7 +222,7 @@ rule
   | Integer NUMBER
   ;
 
-  Braceident:
+  BraceIdent:
     LCURLY Variable RCURLY             {result = val.join}
   ;
 
