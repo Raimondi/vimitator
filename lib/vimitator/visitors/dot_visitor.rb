@@ -32,7 +32,7 @@ module Vimitator
       %w{
         BreakNode ContinueNode EmptyStatementNode FalseNode
         NullNode NumberNode ParameterNode RegexpNode ResolveNode StringNode
-        ThisNode TrueNode
+        ThisNode TrueNode RegisterNode OptionNode EnvVarNode
       }.each do |type|
         define_method(:"visit_#{type}") do |o|
           node = Node.new(@node_index += 1, [type, o.value].compact)

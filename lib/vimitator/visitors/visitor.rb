@@ -3,7 +3,7 @@ module Vimitator
     class Visitor
       TERMINAL_NODES = %w{
         Break Continue EmptyStatement False Null Number Parameter Regexp Resolve
-        String This True
+        String This True Register Option EnvVar
       }
       SINGLE_VALUE_NODES = %w{
         Parenthetical AssignExpr BitwiseNot Block Delete Element ExpressionStatement
