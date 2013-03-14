@@ -119,7 +119,7 @@ rule
   ;
 
   Funcrefcall:
-    Expr8 LPAREN Exprlist RPAREN             {result = val}
+    Expr8 LPAREN ArgList RPAREN             {result = val}
   | Expr8 LPAREN RPAREN                      {result = val}
   ;
 
@@ -163,12 +163,17 @@ rule
   ;
 
   List:
-    LSQUARE Exprlist RSQUARE        {result = val}
-  | LSQUARE RSQUARE                 {result = val}
+    LSQUARE ExprList RSQUARE        {result = ArrayNode.new(val[1])}
+  | LSQUARE RSQUARE                 {result = ArrayNode.new([])}
+  ;
+
+  ExprList:
+    Expr1                        {result = ElementNode.new(val.first)}
+  | ExprList COMMA Expr1         {result = [val.first, ElementNode.new(val[2])].flatten}
   ;
 
   Funccall:
-    Variable LPAREN Exprlist RPAREN {
+    Variable LPAREN ArgList RPAREN {
       result = FunctionCallNode.new(val.first, ArgumentsNode.new(val[2]))
     }
   | Variable LPAREN RPAREN          {
@@ -176,9 +181,9 @@ rule
     }
   ;
 
-  Exprlist:
+  ArgList:
     Expr1                        {result = val}
-  | Exprlist COMMA Expr1         {result = [val.first, val[2]].flatten}
+  | ArgList COMMA Expr1         {result = [val.first, val[2]].flatten}
   ;
 
   Variable:
