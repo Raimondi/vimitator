@@ -139,7 +139,7 @@ rule
   ;
 
   Nested:
-    LPAREN Expr1 RPAREN             {result = val}
+    LPAREN Expr1 RPAREN             {result = ParentheticalNode.new(val[1])}
   ;
 
   Dictionary:
