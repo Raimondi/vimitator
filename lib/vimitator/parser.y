@@ -143,17 +143,23 @@ rule
   ;
 
   Dictionary:
-    LCURLY Dictlist RCURLY          {result = val}
-  | LCURLY RCURLY                   {result = val}
+    LCURLY DictList RCURLY          {result = ObjectLiteralNode.new(val[1])}
+  | LCURLY RCURLY                   {result = ObjectLiteralNode.new([])}
   ;
 
-  Dictlist:
-    Dictitem
-  | Dictlist COMMA Dictitem         {result = val}
+  DictList:
+    DictItem                        {result = val}
+  | DictList COMMA DictItem         {result = [val.first, val.last].flatten}
   ;
 
-  Dictitem:
-    Expr1 COLON Expr1               {result = val}
+  DictItem:
+    DictName COLON Expr1            {result = PropertyNode.new(val.first, val.last)}
+  ;
+
+  DictName:
+    SQSTRING
+  | DQSTRING
+  | Integer
   ;
 
   List:
@@ -204,6 +210,11 @@ rule
   Startofident:
     Braceident
   | HEAD
+  ;
+
+  Integer:
+    NUMBER
+  | Integer NUMBER
   ;
 
   Braceident:

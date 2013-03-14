@@ -77,7 +77,7 @@ edge [ ];
       # end
     end
 
-    %w[ExpressionStatement SourceElements Number AssignExpr VarStatement Arguments
+    %w[ExpressionStatement SourceElements Number AssignExpr VarStatement Arguments ObjectLiteral
       ].each do |node|
       eval "class #{node}Node < Node; end"
     end
