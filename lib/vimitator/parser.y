@@ -124,11 +124,11 @@ rule
   ;
 
   Expr9:
-  | REGISTER {result = [:register, val[0]]}
-  | ENVVAR   {result = [:envvar, val[0]]}
-  | OPTION   {result = [:option, val[0]]}
-  | SQSTRING {result = [:sqstring, val[0]]}
-  | DQSTRING {result = [:dqstring, val[0]]}
+  | REGISTER {result = RegisterNode.new(val.first)}
+  | ENVVAR   {result = EnvVarNode.new(val.first)}
+  | OPTION   {result = OptionNode.new(val.first)}
+  | SQSTRING {result = StringNode.new(val.first)}
+  | DQSTRING {result = StringNode.new(val.first)}
   | List
   | Dictionary
   | Nested
