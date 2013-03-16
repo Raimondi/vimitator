@@ -38,9 +38,9 @@ module Vimitator
       # end
       # alias :/ :pointcut
 
-      # def to_sexp
-      #   SexpVisitor.new.accept(self)
-      # end
+      def to_sexp
+        SexpVisitor.new.accept(self)
+      end
 
       # def to_ecma
       #   ECMAVisitor.new.accept(self)

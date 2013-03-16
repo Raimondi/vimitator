@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'bundler/setup'
+require 'vimitator'
+
+require 'awesome_print'
+
+#require './vim/peg/code_generator'
+
+rex = Vimitator::Parser.new
+
+# ap rex.scan_str(STDIN.read)
+# puts rex.scan_str(STDIN.read)
+ast = rex.scan_str(STDIN.read)
+STDERR.puts ast.inspect
+dots = ast.to_sexp
+puts dots
