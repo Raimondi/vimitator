@@ -15,4 +15,4 @@ rex = Vimitator::Parser.new
 ast = rex.scan_str(STDIN.read)
 STDERR.puts ast.inspect
 dots = ast.to_sexp
-puts dots
+puts dots.inspect
