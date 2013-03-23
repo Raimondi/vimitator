@@ -37,7 +37,8 @@ rule
   \|\|                   { [:OR, text] }
   "(\\.|[^"])*"          { [:DQSTRING, text] }
   '(''|[^'])*'           { [:SQSTRING, text] }
-  (\b[sbwt]:)?[a-zA-Z_]  { [:HEAD, text] }
+  [sbwt]:                { [:SCOPE, text] }
+  [a-zA-Z_]+             { [:HEAD, text] }
   @{REGISTERS}           { [:REGISTER, text] }
   &{IDENT}               { [:OPTION, text] }
   \${IDENT}              { [:ENVVAR, text] }

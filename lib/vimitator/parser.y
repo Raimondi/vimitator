@@ -187,7 +187,8 @@ rule
   ;
 
   Variable:
-    Ident                           {result = ResolveNode.new(val.join)}
+    Ident                           {result = ResolveNode.new(val.flatten.join)}
+  | SCOPE Ident                     {result = ResolveNode.new(val.flatten.join)}
   ;
 
   Ident:
@@ -223,7 +224,7 @@ rule
   ;
 
   BraceIdent:
-    LCURLY Variable RCURLY             {result = val.join}
+    LCURLY Expr1 RCURLY             {result = val.join}
   ;
 
 end
