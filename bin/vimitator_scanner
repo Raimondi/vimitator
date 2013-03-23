@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'bundler/setup'
+require 'vimitator'
+
+require 'awesome_print'
+
+rex = Vimitator::Parser.new
+STDOUT.puts rex.tokenize(STDIN.read).inspect

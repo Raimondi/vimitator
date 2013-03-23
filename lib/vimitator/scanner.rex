@@ -1,5 +1,15 @@
 module Vimitator
 class Parser
+inner
+  def tokenize(str)
+    scan_setup(str)
+    tokens = []
+    begin
+      token = self.next_token
+      tokens << token if token
+    end while token
+    tokens
+  end
 macro
   HEAD      [a-zA-Z_][a-zA-Z_]
   IDENT     [a-zA-Z_][a-zA-Z0-9_]*
