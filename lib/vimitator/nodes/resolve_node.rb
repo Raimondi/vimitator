@@ -4,7 +4,7 @@ module Vimitator
       def ==(other)
         return true if super
         if @value =~ /^[A-Z]/
-          place = [Object, Module, RKelly::Nodes].find { |x|
+          place = [Object, Module, Vimitator::Nodes].find { |x|
             x.const_defined?(@value.to_sym)
           }
           return false unless place
