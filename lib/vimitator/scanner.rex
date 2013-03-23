@@ -1,6 +1,7 @@
 module Vimitator
 class Parser
 macro
+  HEAD      [a-zA-Z_][a-zA-Z_]
   IDENT     [a-zA-Z_][a-zA-Z0-9_]*
   DIGIT     \d+
   REGISTERS [-a-zA-Z0-9"_:.%=*+~\/]
@@ -21,9 +22,9 @@ rule
   #                      { [:HASH, text] }
   ([!=<>]~|\bis(not)?\b|[<>])[#?]?  { [:CMPOP, text] }
   =                      { [:ASSIGN, text] }
-  \+=                     { [:PLUSASSIGN, text] }
+  \+=                    { [:PLUSASSIGN, text] }
   -=                     { [:MINUSASSIGN, text] }
-  \.=                     { [:DOTASSIGN, text] }
+  \.=                    { [:DOTASSIGN, text] }
   (?<!\s)\.(?!\s)        { [:DICDOT, text] }
   \.                     { [:CATDOT, text] }
   \+                     { [:PLUS, text] }
@@ -40,9 +41,8 @@ rule
   [sbwt]:                { [:SCOPE, text] }
   [a-zA-Z_]+             { [:HEAD, text] }
   @{REGISTERS}           { [:REGISTER, text] }
-  &{IDENT}               { [:OPTION, text] }
+  &{HEAD}{IDENT}         { [:OPTION, text] }
   \${IDENT}              { [:ENVVAR, text] }
-  {IDENT}                { [:IDENTIFIER, text] }
   \s+                    # ignore
 end
 end
