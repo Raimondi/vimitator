@@ -4,7 +4,7 @@ require 'rubygems'
 require 'bundler/setup'
 require 'vimitator'
 
-require 'awesome_print'
+# require 'awesome_print'
 
 rex = Vimitator::Parser.new
-STDOUT.puts rex.tokenize(STDIN.read).inspect
+puts rex.scan_str(STDIN.read).inspect
